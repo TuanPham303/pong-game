@@ -12,7 +12,7 @@ let Dy = -2;
 
 // paddle parameters
 let paddleHeight = 10;
-let paddleWidth = 100;
+let paddleWidth = 400;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let paddleY = canvas.height - paddleHeight;
 let paddleSpeed = 10;
