@@ -34,9 +34,31 @@ function draw () {
 
   //request animation recursion call
   requestAnimationFrame( draw );
-}
-requestAnimationFrame( draw );
 
+  // game functionalities
+  $('.restart').on('click', function(){
+    restart();
+  })
+  gameOver();
+}
+draw();
+
+function restart(){
+  x = canvas.width / 2;
+  y = canvas.height - 20;
+  Dx = 2;
+  Dy = -2;
+  paddleX = (canvas.width - paddleWidth) / 2;
+  paddleY = canvas.height - paddleHeight;
+  point = 0;
+  score();
+}
+function gameOver(){
+  if ( y > canvas.height ) {
+    alert('game over');
+    restart();
+  }
+}
 function score(){
   document.getElementById('score').innerHTML = `${point}`
 }
