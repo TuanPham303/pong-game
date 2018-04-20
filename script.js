@@ -12,27 +12,10 @@ let Dy = -2;
 
 // paddle parameters
 let paddleHeight = 10;
-let paddleWidth = 400;
+let paddleWidth = 100;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let paddleY = canvas.height - paddleHeight;
 let paddleSpeed = 10;
-
-function score () {
-  document.getElementById('score').innerHTML = `${point}`
-}
-
-function drawBall () {
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawPaddle () {
-  ctx.beginPath();
-  ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
-  ctx.closePath();
-}
 
 function draw () {
   // clear canvas to redraw
@@ -40,6 +23,30 @@ function draw () {
 
   // draw the ball and the bouncing effect
   drawBall();
+  ballBouncing();
+
+  // draw paddle and paddle's movement
+  drawPaddle();
+  paddleMove();
+
+  // detect collision of the ball and paddle
+  ballPaddleCollision();
+
+  //request animation recursion call
+  requestAnimationFrame( draw );
+}
+requestAnimationFrame( draw );
+
+function score(){
+  document.getElementById('score').innerHTML = `${point}`
+}
+function drawBall(){
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
+}
+function ballBouncing(){
   x += Dx;
   y += Dy;
   if ( x + radius + Dx > canvas.width || x - radius + Dx < 0 ) {
@@ -48,9 +55,13 @@ function draw () {
   if ( y - radius + Dy < 0 ) {
     Dy = -Dy;
   }
-
-  // draw paddle and paddle's movement
-  drawPaddle();
+}
+function drawPaddle () {
+  ctx.beginPath();
+  ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+  ctx.closePath();
+}
+function paddleMove(){
   document.onkeydown = function(e) {
     switch (e.keyCode) {
       case 37:
@@ -67,19 +78,20 @@ function draw () {
         break;
     }
   };
-
-  // detect collision 
-  if ( x > paddleX - radius && x < paddleX + paddleWidth && y + radius === canvas.height - paddleHeight ) {
+}
+function ballPaddleCollision(){
+  if ( x > paddleX - radius && x < paddleX + paddleWidth/2 && y + radius === canvas.height - paddleHeight ) {
     Dy = -Dy;
+    Dx = -Dx - 1;
     point++;
-    score ();
-    if ( point === 3 ) {
-      Dx = -Dx - 100;
-    }
+    score();
   }
-
-  requestAnimationFrame( draw );
-  
+  if ( x >= paddleX + paddleWidth/2 && x < paddleX + paddleWidth && y + radius === canvas.height - paddleHeight ) {
+    Dy = -Dy;
+    Dx++;
+    point++;
+    score();
+  }
 }
 
-requestAnimationFrame( draw );
+
